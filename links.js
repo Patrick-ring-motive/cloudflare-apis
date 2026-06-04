@@ -28,12 +28,16 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     url.host = targetHost;
-    const req = new Request(String(url),Object.defineProperty(request,'method',{value:'GET'}));
+    const req = new Request(String(url), Object.defineProperty(request, 'method', {
+      value: 'GET'
+    }));
     const res = await fetchResponse(req);
     const text = await res.text();
-    const links = (text.match(rex)||[]).map(x=>x.replace(/(src|href)=|["<>\)\[\]]/g,''));
-    if(!links.length){
-      return new Response(null,{status:404})
+    const links = (text.match(rex) || []).map(x => x.replace(/(src|href)=|["<>\)\[\]]/g, ''));
+    if (!links.length) {
+      return new Response(null, {
+        status: 404
+      })
     }
     return new Response(stringify([...new Set(links)]));
   }
